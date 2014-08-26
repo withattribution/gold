@@ -1,12 +1,16 @@
+// elaphantine
+
 var baudio = require('baudio');
 var fs     = require('fs');
 var csv = require("fast-csv");
 var childProcess = require('child_process'),
     recording;
 
-var frequency = 400,
-    r         = 8000,
-    tau       = 2 * Math.PI;
+var frequency = 406;
+var r         = 8000;
+var tau       = 2 * Math.PI;
+
+var rec = baudio;
 
 var b = baudio(opts={rate:r}, function (t) {
   return sin(frequency);
@@ -16,36 +20,38 @@ var b = baudio(opts={rate:r}, function (t) {
   }
 });
 
-// b.record('something.mp3').pipe();
 b.play();
+
+// rec.record('something1.dat');
+
 // b.record('else.mp3');
 // b.pipe(process.stdout);
 
-recording = childProcess.exec('rec -c 1 sound.dat trim 0 00:01', function (error, stdout, stderr) {
- if (error) {
-   console.log(error.stack);
-   console.log('Error code: '+error.code);
-   console.log('Signal received: '+error.signal);
- }
- console.log('Child Process STDOUT: '+stdout);
- console.log('Child Process STDERR: '+stderr);
-});
+// recording = childProcess.exec('rec -c 1 sound.dat trim 0 00:001', function (error, stdout, stderr) {
+//  if (error) {
+//    console.log(error.stack);
+//    console.log('Error code: '+error.code);
+//    console.log('Signal received: '+error.signal);
+//  }
+ 
+//  console.log('Child Process STDOUT: '+stdout);
+//  // console.log('Child Process STDERR: '+stderr);
+// });
 
-recording.on('exit', function (code) {
- console.log('Child process exited with exit code '+code);
- // fs.createReadStream('sound.dat').pipe(process.stdout);
-csv
- .fromPath('./sound.dat')
- .on("record", function(data){
-     console.log('data');
- })
- .on("end", function(){
-     console.log("done");
- });
+// recording.on('exit', function (code) {
+//  console.log('Child process exited with exit code '+code);
+//  // fs.createReadStream('sound.dat').pipe(process.stdout);
 
-});
+// // csv
+// //  .fromPath('./sound.dat', {delimiter:'\t'})
+// //  .on("record", function(data){
+// //      console.log(data[0]);
+// //  })
+// //  .on("end", function(){
+// //      console.log("done");
+// //  });
 
-
+// });
 
 
 // //ex 4

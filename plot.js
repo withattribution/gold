@@ -3,12 +3,12 @@ ascope.appendTo('#ascope');
 
 setInterval(function () {
     ascope.setTime(Date.now() / 1000);
-    ascope.draw(fn);
+    ascope.draw(fn1);
 }, 50);
 
 var frequency = 400; //frequency in hz
 
-function fn (t) {
+function fn1 (t) {
     return sin(frequency); //* 0.25 + sin(441) * 0.25 + sin(880) * 0.5;
     function sin (x) { return Math.sin(2 * Math.PI * t * x) }
 }
