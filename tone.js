@@ -18,7 +18,7 @@ var rec = spawn('rec', ['--channels', '2',
                         // '-t', 'sox', '-',
                         'tone.wav',
                         'trim', '0s', '44100s',
-                        'silence', '1', '4100s','0.1%', '1', '4100s','0.1%'
+                        'silence', '1', '10100s','0.1%', '1', '4100s','0.1%'
                         ]);
 
 var data = [];
