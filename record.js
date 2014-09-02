@@ -17,11 +17,13 @@ var end   = 600;
 var step  = 100;
 
 var format = ".wav";
-fs.mkdir('./'+uuid, function() { console.log('directory created'); });
-
 var rec,synth,stat;
 
-measurement();
+exports.measureSpectrum = function(req, res){
+
+  fs.mkdir('./'+uuid, function() { console.log('directory created'); });
+
+  measurement();
 
 function readRMS (frequency) {
 
@@ -57,6 +59,7 @@ function readRMS (frequency) {
     }
     else {
       console.log("completely finished!");
+      res.json(plot);
     }
   });
 }
@@ -93,19 +96,5 @@ function measurement(){
   });
 }
 
-    //then spawn the stat command and grab the rms val of the amplitude
-    //and push it into the data array for the current frequency (first)
-    //then check, then inc, then remeasure if necessary right?
-    //then find this exact girl you are with and lay down next to her
-    //do not imagine a life that is better because this is the life that is
-    //better -- it is best
 
-//final object looks like var data = [{x:freq[0],y:amp[0]}, {x:freq[1],y:amp[1]}, ... {x:freq[i],y:amp[i]} ];
-
-        // data: [ 
-        //     { x: 0, y: 40 }, 
-        //     { x: 1, y: 49 }, 
-        //     { x: 2, y: 38 }, 
-        //     { x: 3, y: 30 }, 
-        //     { x: 4, y: 32 } ]
-
+};
