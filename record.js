@@ -12,8 +12,8 @@ var uuid = uuid.v1();
 
 var plot = [];
 
-var freq  = 400;
-var end   = 600;
+var freq  = 100;
+var end   = 20000;
 var step  = 100;
 
 var format = ".wav";
@@ -78,7 +78,7 @@ function measurement(){
                       '-b', '16',
                       // '-t', 'sox', '-',
                       './'+uuid+'/'+freq+'-tone'+format,
-                      'trim', '4410s', '44100s',
+                      'trim', '4410s', '14100s',
                       'silence', '1', '10100s','0.1%', '1', '4100s','0.1%'
                       ]);
 
