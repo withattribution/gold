@@ -1,0 +1,32 @@
+<!--doctype html--> 
+
+<script src="/d3.min.js"></script> 
+<script src="/d3.layout.min.js"></script>
+<script src="/rickshaw.min.js"></script>
+
+<div id="chart"></div>
+
+<script> 
+
+var request = new XMLHttpRequest(); 
+request.open("GET", "/api/measure/spectrum", true); 
+request.onload = function() { 
+  if (request.status >= 200 && request.status < 400){ data = JSON.parse(request.responseText); 
+
+    var graph = new Rickshaw.Graph({
+      element: document.querySelector("#chart"), width: 1000, height: 200, 
+      series: [{color: "blue",
+      data: data
+      }]
+    });
+
+    graph.render(); 
+
+  } 
+  else {}};
+
+  request.onerror = function() {};
+
+  request.send();
+
+</script>
