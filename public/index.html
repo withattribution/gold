@@ -6,27 +6,31 @@
 
 <div id="chart"></div>
 
+<button id="demo" onclick="gatherData()">READ SPECTRUM</button>
+
 <script> 
 
-var request = new XMLHttpRequest(); 
-request.open("GET", "/api/measure/spectrum", true); 
-request.onload = function() { 
-  if (request.status >= 200 && request.status < 400){ data = JSON.parse(request.responseText); 
+function gatherData(){
+  var request = new XMLHttpRequest(); 
+  request.open("GET", "/api/measure/spectrum", true); 
+  request.onload = function() { 
+    if (request.status >= 200 && request.status < 400){ data = JSON.parse(request.responseText); 
 
-    var graph = new Rickshaw.Graph({
-      element: document.querySelector("#chart"), width: 1000, height: 200, 
-      series: [{color: "blue",
-      data: data
-      }]
-    });
+      var graph = new Rickshaw.Graph({
+        element: document.querySelector("#chart"), width: 1000, height: 200, 
+        series: [{color: "blue",
+        data: data
+        }]
+      });
 
-    graph.render(); 
+      graph.render(); 
 
-  } 
-  else {}};
+    } 
+    else {}};
 
-  request.onerror = function() {};
+    request.onerror = function() {};
 
-  request.send();
+    request.send();  
+}
 
 </script>
