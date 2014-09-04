@@ -1,12 +1,8 @@
 var util = require('util');
 var fs   = require('fs');
 var uuid = require('uuid');
-var es   = require('event-stream');
 
 var spawn = require('child_process').spawn;
-
-var λ = require('contra');
-var _ = require('lodash');
 
 var uuid = uuid.v1();
 
