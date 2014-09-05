@@ -1,11 +1,13 @@
+'use strict';
+
 var express = require('express');
 var record = require('./record');
 
 var app = express();
 
+app.engine('html', require('ejs').renderFile);
+app.set('view engine', 'html');
 app.use(express.static(__dirname + '/public'));
-
-app.set('view engine','html');
 
 app.get('/api/measure/spectrum',record.measureSpectrum);
 

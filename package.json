@@ -24,6 +24,7 @@
   "homepage": "https://github.com/withattribution/gold",
   "dependencies": {
     "express": "~4.8.7",
-    "uuid": "~1.4.1"
+    "uuid": "~1.4.1",
+    "ejs": "~1.0.0"
   }
 }
