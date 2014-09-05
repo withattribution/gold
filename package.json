@@ -1,0 +1,29 @@
+{
+  "name": "gold",
+  "version": "0.0.0",
+  "description": "something to do with gold",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/withattribution/gold.git"
+  },
+  "keywords": [
+    "i",
+    "love",
+    "gooooooold"
+  ],
+  "author": "alberto tafoya",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/withattribution/gold/issues"
+  },
+  "homepage": "https://github.com/withattribution/gold",
+  "dependencies": {
+    "express": "~4.8.7",
+    "uuid": "~1.4.1"
+  }
+}
