@@ -70,11 +70,18 @@ function measurement(){
                          'synth', 'sin' , freq
                          ]);
 
-  rec = spawn('rec', ['--channels', '2',
-                      '-q',
-                      '--rate', '44.1k',
-                      '-b', '16',
-                      // '-t', 'sox', '-',
+  // rec = spawn('rec', ['--channels', '2',
+  //                     '-q',
+  //                     '--rate', '44.1k',
+  //                     '-b', '16',
+  //                     // '-t', 'sox', '-',
+  //                     './'+uuid+'/'+freq+'-tone'+format,
+  //                     'trim', '4410s', '14100s',
+  //                     'silence', '1', '10100s','0.1%', '1', '4100s','0.1%'
+  //                     ]);
+
+  rec = spawn('sox', ['-q',
+                      '-t', 'alsa', 'default',
                       './'+uuid+'/'+freq+'-tone'+format,
                       'trim', '4410s', '14100s',
                       'silence', '1', '10100s','0.1%', '1', '4100s','0.1%'
