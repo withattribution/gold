@@ -2,7 +2,6 @@ var express = require('express');
 var record = require('./record');
 
 var app = express();
-var path = require('path');
 
 app.use(express.static(__dirname + '/public'));
 
