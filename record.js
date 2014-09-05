@@ -63,10 +63,15 @@ function readRMS (frequency) {
 }
 
 function measurement(){
+  // synth = spawn('play', ['-n',
+  //                        '--channels', '2',
+  //                        '-b', '32',
+  //                        '--rate', '44.1k',
+  //                        'synth', 'sin' , freq
+  //                        ]);
+
   synth = spawn('play', ['-n',
-                         '--channels', '2',
-                         '-b', '32',
-                         '--rate', '44.1k',
+                         '-t', 'alsa',
                          'synth', 'sin' , freq
                          ]);
 
