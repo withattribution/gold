@@ -80,6 +80,14 @@ function measurement(){
 
   console.log("STARTED with PID:", rec.pid);
 
+  synth.stderr.on('data',function(err){
+    console.log('SYNTH ERR: '+err);
+  })
+
+  rec.stderr.on('data',function(err){
+    console.log('REC ERR: '+err);
+  })
+
   rec.on('error', function(e){
     console.log(e)
   });
