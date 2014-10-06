@@ -10,11 +10,11 @@ var uuid = uuid.v1();
 
 var plot = [];
 
-var freq  = 100;
-var end   = 20000;
+var freq  = 400;
+var end   = 2000;
 var step  = 100;
 
-var format = ".wav";
+var format = ".raw";
 var rec,synth,stat;
 
 exports.measureSpectrum = function(req, res){
@@ -28,8 +28,9 @@ function readRMS (frequency) {
   var statStream;
 
   stat = spawn('sox', ['./'+uuid+'/'+freq+'-tone'+format,
-                       '-n', 'stat'
-                       ]);
+                       '-n',
+                       'stat']
+  );
 
   stat.stderr.setEncoding('utf8');
   stat.stderr.on('data', function(data){
@@ -41,19 +42,30 @@ function readRMS (frequency) {
     var numeric = /(?:\d*\.)?\d+/;
     var rmsAmp = numeric.exec(theLines[8]);
 
-    plot.push({x:frequency,y:parseFloat(rmsAmp[0])});
-    console.log('plot-data: '+util.inspect(plot));
+    console.error('frequency: '+frequency+' rms: '+rmsAmp);
+    // if(typeof rmsAmp === null) {
+    //   console.error("Array Undefined!");
+    // }
+    // else {
+      if (typeof rmsAmp === null) {
+        console.log("IS null");
+      }
+
+    plot.push({x:frequency,y:parseFloat(rmsAmp)});
+    // console.log('plot-data: '+util.inspect(plot));
   }
 
   stat.on('close',function(code, signal){
     
-    console.log("closed sox stat"+code+' and err: '+signal);
+    // console.log("closed sox stat: "+code+' and err: '+signal);
 
     filterAmplitude();
 
     if (freq < end ) {
       freq += step;
-      measurement();
+
+      setTimeout(measurement(),1000);
+      
     }
     else {
       console.log("completely finished!");
@@ -71,28 +83,33 @@ function measurement(){
   //                        ]);
 
   synth = spawn('play', ['-n',
-                         '-t', 'alsa',
+                         '-q',
+                         // '-t', 'alsa',
                          'synth', 'sin' , freq
                          ]);
 
-  // rec = spawn('rec', ['--channels', '2',
-  //                     '-q',
-  //                     '--rate', '44.1k',
-  //                     '-b', '16',
-  //                     // '-t', 'sox', '-',
+
+  rec = spawn('sox', [
+    // '--channels', '2',
+                      // '-q',
+                      // '--rate', '44.1k',
+                      // '-b', '16',
+                      // '--no-dither',
+                      '-t', 'coreaudio', 'Built-in\ Input',
+                      // '-t', 'sox', '-',
+                      './'+uuid+'/'+freq+'-sample'+format
+                      // 'trim', '1410s', '14100s',
+                      // 'silence', '1', '100100s','0.1%', '1', '4100s','0.1%'
+                      ]);
+
+  // rec = spawn('rec', ['-q',
+  //                     // '-t', 'alsa', 'default',
   //                     './'+uuid+'/'+freq+'-tone'+format,
   //                     'trim', '4410s', '14100s',
   //                     'silence', '1', '10100s','0.1%', '1', '4100s','0.1%'
   //                     ]);
 
-  rec = spawn('sox', ['-q',
-                      '-t', 'alsa', 'default',
-                      './'+uuid+'/'+freq+'-tone'+format,
-                      'trim', '4410s', '14100s',
-                      'silence', '1', '10100s','0.1%', '1', '4100s','0.1%'
-                      ]);
-
-  console.log("STARTED with PID:", rec.pid);
+  // console.log("STARTED with PID:", rec.pid);
 
   synth.stderr.on('data',function(err){
     console.log('SYNTH ERR: '+err);
@@ -106,11 +123,13 @@ function measurement(){
     console.log(e)
   });
 
+  setTimeout(readRMS(freq),1000);
+
   rec.on('close', function (code, signal) {
 
     synth.kill('SIGKILL');
 
-    readRMS(freq);
+    // readRMS(freq);
   });
 }
 

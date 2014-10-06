@@ -25,6 +25,8 @@
   "dependencies": {
     "express": "~4.8.7",
     "uuid": "~1.4.1",
-    "ejs": "~1.0.0"
+    "ejs": "~1.0.0",
+    "through": "~2.3.6",
+    "split": "~0.3.0"
   }
 }
