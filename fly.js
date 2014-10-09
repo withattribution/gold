@@ -193,8 +193,10 @@ rec.stdout.on('data',function(buf){
     rec.kill('SIGKILL');
     console.log("boooom: "+steps);
     // console.log(q.raw);
+    console.log("qq: "+q.getScaledRMS());
     var qq = q.rms();
-console.log("qq: "+qq);
+    console.log("qq: "+qq);
+console.log("qq: "+util.inspect(q.getSample()));
 
 //     var rolling_avg = _.reduce(rolling,function(sum,num){ return num+sum; })
 //     var longer_avg = rolling_avg/steps;
