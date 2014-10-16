@@ -1,137 +1,89 @@
-'use strict';
-
-var util = require('util');
-var fs   = require('fs');
-var uuid = require('uuid');
-
+var inherits = require('inherits');
+var Readable = require('readable-stream').Readable;
 var spawn = require('child_process').spawn;
 
-var uuid = uuid.v1();
 
-var plot = [];
+var fs = require('fs');
 
-var freq  = 400;
-var end   = 2000;
-var step  = 100;
+var wstream = fs.createWriteStream('./myOutput.raw');
 
-var format = ".raw";
-var rec,synth,stat;
+module.exports = function (opts) {
+    if (!opts) opts = {};
+    var r = new R (opts);
+    return r;
+};
 
-exports.measureSpectrum = function(req, res){
+function R (opts) {
+    this.rate = opts.rate || 44100;
+}
 
-  fs.mkdir('./'+uuid, function() { console.log('directory created'); });
+R.prototype.record = function (opts) {
+    var ps = this._spawn('sox', mergeArgs(opts, {
+        'c' : 1,
+        'r' : this.rate,
+        't' : 's32',
+        'b' : 32,
+        'type' : 'coreaudio'
+    }).concat('default', '-V6' ,'--type', 's32', '-c', '1', '-r', '44100', '-b', '32', '-'));    
+    // this.pipe(ps.stdin);
+    ps.stdout.pipe(wstream);
+    return ps;
+};
 
-  measurement();
+// sox -c 1 -r 44100 -b 32 --type coreaudio default --type raw -c 1 -r 44100 -b 32 -p
 
-function readRMS (frequency) {
+    // rec = spawn('sox', [  
+    //   //GLOBAL OPTIONS
+    //   // '-q',
+    //   // '-V8',
+    //   // '--buffer','8192', //this is the global option to change the buffer size in case you want to limit the samples gathered
+    //   //INPUT FILE OPTIONS
+    //   // '--type','raw',
+    //   '--type', 'coreaudio',
+    //   '--channels', '1',
+    //   '--rate', '48k',
+    //   '--bits', '32',
+    //   '--encoding','float',
+    //   //INPUT FILE (OR SOURCE)
+    //   'default',
+    //   //'Built-in\ Input',
+    //   //OUTPUT FILE OPTIONS
+    //   '--type','raw',
+    //   '--channels', '1',
+    //   '--rate', '48k',
+    //   '--bits', '32',
+    //   '--encoding','float',
+    //   //OUTPUT FILE (OR DESITNATION)
+    //   './'+freq+'-sample'+format
+    //   // '-t','sox','-'
+    //   // '-p'
+    // ]);
 
-  var statStream;
-
-  stat = spawn('sox', ['./'+uuid+'/'+freq+'-tone'+format,
-                       '-n',
-                       'stat']
-  );
-
-  stat.stderr.setEncoding('utf8');
-  stat.stderr.on('data', function(data){
-    statStream += data;
-  });
-
-  function filterAmplitude() {
-    var theLines = statStream.split('\n');
-    var numeric = /(?:\d*\.)?\d+/;
-    var rmsAmp = numeric.exec(theLines[8]);
-
-    console.error('frequency: '+frequency+' rms: '+rmsAmp);
-    // if(typeof rmsAmp === null) {
-    //   console.error("Array Undefined!");
-    // }
-    // else {
-      if (typeof rmsAmp === null) {
-        console.log("IS null");
-      }
-
-    plot.push({x:frequency,y:parseFloat(rmsAmp)});
-    // console.log('plot-data: '+util.inspect(plot));
-  }
-
-  stat.on('close',function(code, signal){
+function mergeArgs (opts, args) {
+    Object.keys(opts || {}).forEach(function (key) {
+        args[key] = opts[key];
+    });
     
-    // console.log("closed sox stat: "+code+' and err: '+signal);
-
-    filterAmplitude();
-
-    if (freq < end ) {
-      freq += step;
-
-      setTimeout(measurement(),1000);
-      
-    }
-    else {
-      console.log("completely finished!");
-      res.json(plot);
-    }
-  });
+    return Object.keys(args).reduce(function (acc, key) {
+        var dash = key.length === 1 ? '-' : '--';
+        return acc.concat(dash + key, args[key]);
+    }, []);
 }
 
-function measurement(){
-  // synth = spawn('play', ['-n',
-  //                        '--channels', '2',
-  //                        '-b', '32',
-  //                        '--rate', '44.1k',
-  //                        'synth', 'sin' , freq
-  //                        ]);
-
-  synth = spawn('play', ['-n',
-                         '-q',
-                         // '-t', 'alsa',
-                         'synth', 'sin' , freq
-                         ]);
-
-
-  rec = spawn('sox', [
-    // '--channels', '2',
-                      // '-q',
-                      // '--rate', '44.1k',
-                      // '-b', '16',
-                      // '--no-dither',
-                      '-t', 'coreaudio', 'Built-in\ Input',
-                      // '-t', 'sox', '-',
-                      './'+uuid+'/'+freq+'-sample'+format
-                      // 'trim', '1410s', '14100s',
-                      // 'silence', '1', '100100s','0.1%', '1', '4100s','0.1%'
-                      ]);
-
-  // rec = spawn('rec', ['-q',
-  //                     // '-t', 'alsa', 'default',
-  //                     './'+uuid+'/'+freq+'-tone'+format,
-  //                     'trim', '4410s', '14100s',
-  //                     'silence', '1', '10100s','0.1%', '1', '4100s','0.1%'
-  //                     ]);
-
-  // console.log("STARTED with PID:", rec.pid);
-
-  synth.stderr.on('data',function(err){
-    console.log('SYNTH ERR: '+err);
-  })
-
-  rec.stderr.on('data',function(err){
-    console.log('REC ERR: '+err);
-  })
-
-  rec.on('error', function(e){
-    console.log(e)
-  });
-
-  setTimeout(readRMS(freq),1000);
-
-  rec.on('close', function (code, signal) {
-
-    synth.kill('SIGKILL');
-
-    // readRMS(freq);
-  });
-}
-
-
+R.prototype._spawn = function (cmd, args) {
+    var self = this;
+    var ps = spawn(cmd, args);
+    ps.on('error', function (err) {
+        if (err.code === 'ENOENT') {
+            self.emit('error', new Error(
+                'Failed to launch the `' + cmd + '` command.\n'
+                + 'Make sure you have sox installed:\n\n'
+                + '  http://sox.sourceforge.net\n'
+            ));
+        }
+        else self.emit('error', err);
+    });
+    ps.stdin.on('error', function () {});
+    
+    return ps;
 };

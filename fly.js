@@ -6,7 +6,6 @@
 
 var util = require('util');
 var fs   = require('fs');
-var _ = require('lodash');
 var S = require('./sample.js');
 
 

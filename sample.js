@@ -3,11 +3,8 @@
 // a done event when finished
 
 var _ = require('lodash');
-var inherits = require('inherits');
-var EventEmitter = require('events').EventEmitter;
 
 module.exports = Sample;
-inherits(Sample, EventEmitter);
 
 function Sample (frequency, opts) {
   var self = this;
@@ -52,7 +49,7 @@ Sample.prototype.rms = function() {
       unscaled.push(Math.sqrt(accumulator/sampleCount))
   });
 
-  this.nativeRMS = ( _.reduce(unscaled,function(sum,num){ return num+sum; }) ) / unscaled.length ; 
+  this.nativeRMS = ( _(unscaled).reduce(function(sum,num){return num+sum;}, 0) ) / unscaled.length ; 
   return this.scale(this.nativeRMS);
 }
 
