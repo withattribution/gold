@@ -18,7 +18,7 @@ function S (opts, fn) {
     this.readable = true;
     this.rate = opts.rate || 44100;
     this._fn = fn;
-    
+
     this.t = 0;
     this.i = 0;
 }
@@ -28,12 +28,12 @@ inherits(S, Readable);
 S.prototype._read = function (bytes) {
     if (!bytes) bytes = 8192;
     var self = this;
-    
+
     var buf = new Buffer(Math.floor(bytes));
     function clamp (x) {
         return Math.max(Math.min(x, Math.pow(2,31)-1), -Math.pow(2,31));
     }
-    
+
     for (var i = 0; i < buf.length; i += 4) {
         var t = self.t + Math.floor(i / 4) / self.rate;
         var counter = self.i + Math.floor(i / 4);
@@ -43,10 +43,10 @@ S.prototype._read = function (bytes) {
 
         buf.writeInt32LE(clamp(signed(n)), i);
     }
-    
+
     self.i += buf.length / 4;
     self.t += buf.length / 4 / self.rate;
-    
+
     if (!self._ended) this.push(buf);
 };
 
@@ -71,50 +71,11 @@ S.prototype.play = function (opts) {
         'c': 1,
         'r': this.rate,
         't': 's32'
-    }).concat('-', '-V6'));
+    }).concat('-', '-q'));
 
     this.pipe(ps.stdin);
     return ps;
 };
-
-S.prototype.record = function (file, opts) {
-    var ps = this._spawn('sox', mergeArgs(opts, {
-        'c' : 1,
-        'r' : this.rate,
-        't' : 's32',
-    }).concat('-', '-q', '-o', file));
-    
-    this.pipe(ps.stdin);
-    return ps;
-};
-
-    // rec = spawn('sox', [  
-    //   //GLOBAL OPTIONS
-    //   // '-q',
-    //   // '-V8',
-    //   // '--buffer','8192', //this is the global option to change the buffer size in case you want to limit the samples gathered
-    //   //INPUT FILE OPTIONS
-    //   // '--type','raw',
-    //   '--type', 'coreaudio',
-    //   '--channels', '1',
-    //   '--rate', '48k',
-    //   '--bits', '32',
-    //   '--encoding','float',
-    //   //INPUT FILE (OR SOURCE)
-    //   'default',
-    //   //'Built-in\ Input',
-    //   //OUTPUT FILE OPTIONS
-    //   '--type','raw',
-    //   '--channels', '1',
-    //   '--rate', '48k',
-    //   '--bits', '32',
-    //   '--encoding','float',
-    //   //OUTPUT FILE (OR DESITNATION)
-    //   './'+freq+'-sample'+format
-    //   // '-t','sox','-'
-    //   // '-p'
-    // ]);
-
 
 S.prototype._spawn = function (cmd, args) {
     var self = this;
@@ -131,11 +92,11 @@ S.prototype._spawn = function (cmd, args) {
     });
     ps.stdin.on('error', function () {});
 
-    ps.stderr.on('data',function(err){
-      console.log('REC ERR: ---------------------------------- \n'
-                +err
-                +'\nREC ERR: ********************************** \n');
-    });
+    // ps.stderr.on('data',function(err){
+    //   console.log('REC ERR: ---------------------------------- \n'
+    //             +err
+    //             +'\nREC ERR: ********************************** \n');
+    // });
 
     return ps;
 };

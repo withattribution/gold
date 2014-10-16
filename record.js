@@ -2,11 +2,6 @@ var inherits = require('inherits');
 var Readable = require('readable-stream').Readable;
 var spawn = require('child_process').spawn;
 
-
-var fs = require('fs');
-
-var wstream = fs.createWriteStream('./myOutput.raw');
-
 module.exports = function (opts) {
     if (!opts) opts = {};
     var r = new R (opts);
@@ -24,9 +19,8 @@ R.prototype.record = function (opts) {
         't' : 's32',
         'b' : 32,
         'type' : 'coreaudio'
-    }).concat('default', '-V6' ,'--type', 's32', '-c', '1', '-r', '44100', '-b', '32', '-'));    
-    // this.pipe(ps.stdin);
-    ps.stdout.pipe(wstream);
+    }).concat('default', '-q' ,'--type', 's32', '-c', '1', '-r', '44100', '-b', '32', '-'));    
+
     return ps;
 };
 
@@ -84,6 +78,5 @@ R.prototype._spawn = function (cmd, args) {
         else self.emit('error', err);
     });
     ps.stdin.on('error', function () {});
-    
     return ps;
 };

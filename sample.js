@@ -8,7 +8,7 @@ module.exports = Sample;
 
 function Sample (frequency, opts) {
   var self = this;
-  if (!(this instanceof Sample)) return new Sample(opts);
+  if (!(this instanceof Sample)) return new Sample(frequency,opts);
   if (!opts) opts = {};
   
   this.frequency = frequency;
@@ -32,6 +32,12 @@ Sample.prototype.scale = function(x, opts) {
   return this.scaledRMS;
 }
 
+Sample.prototype.sampling = function(buffer) {
+  if (!Buffer.isBuffer(buffer)) {return};
+  this.raw.push(buffer);
+  return this;
+}
+
 Sample.prototype.rms = function() {
   var self = this;
 
@@ -50,7 +56,9 @@ Sample.prototype.rms = function() {
   });
 
   this.nativeRMS = ( _(unscaled).reduce(function(sum,num){return num+sum;}, 0) ) / unscaled.length ; 
-  return this.scale(this.nativeRMS);
+  this.scale(this.nativeRMS);
+
+  return this;
 }
 
 Sample.prototype.getNativeRMS = function() {
@@ -62,5 +70,5 @@ Sample.prototype.getScaledRMS = function() {
 }
 
 Sample.prototype.getSample = function() {
-  return {frequency: this.frequency, rms: this.scaledRMS};
+  return {f: this.frequency, rms: this.scaledRMS};
 }
