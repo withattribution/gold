@@ -30,7 +30,6 @@ var r = Record(o).record();
 r.stdout.pipe(
   through(function write(data) {
     // this.queue(data); //data *must* not be null
-    // console.log("sauce cocks");
     var sample = Sample(frequency); 
     memStore.push(sample.sampling(data).rms().getSample());
 

@@ -24,6 +24,34 @@ R.prototype.record = function (opts) {
     return ps;
 };
 
+function mergeArgs (opts, args) {
+    Object.keys(opts || {}).forEach(function (key) {
+        args[key] = opts[key];
+    });
+    
+    return Object.keys(args).reduce(function (acc, key) {
+        var dash = key.length === 1 ? '-' : '--';
+        return acc.concat(dash + key, args[key]);
+    }, []);
+}
+
+R.prototype._spawn = function (cmd, args) {
+    var self = this;
+    var ps = spawn(cmd, args);
+    ps.on('error', function (err) {
+        if (err.code === 'ENOENT') {
+            self.emit('error', new Error(
+                'Failed to launch the `' + cmd + '` command.\n'
+                + 'Make sure you have sox installed:\n\n'
+                + '  http://sox.sourceforge.net\n'
+            ));
+        }
+        else self.emit('error', err);
+    });
+    ps.stdin.on('error', function () {});
+    return ps;
+};
+
 // sox -c 1 -r 44100 -b 32 --type coreaudio default --type raw -c 1 -r 44100 -b 32 -p
 
     // rec = spawn('sox', [  
@@ -53,30 +81,4 @@ R.prototype.record = function (opts) {
     //   // '-p'
     // ]);
 
-function mergeArgs (opts, args) {
-    Object.keys(opts || {}).forEach(function (key) {
-        args[key] = opts[key];
-    });
-    
-    return Object.keys(args).reduce(function (acc, key) {
-        var dash = key.length === 1 ? '-' : '--';
-        return acc.concat(dash + key, args[key]);
-    }, []);
-}
 
-R.prototype._spawn = function (cmd, args) {
-    var self = this;
-    var ps = spawn(cmd, args);
-    ps.on('error', function (err) {
-        if (err.code === 'ENOENT') {
-            self.emit('error', new Error(
-                'Failed to launch the `' + cmd + '` command.\n'
-                + 'Make sure you have sox installed:\n\n'
-                + '  http://sox.sourceforge.net\n'
-            ));
-        }
-        else self.emit('error', err);
-    });
-    ps.stdin.on('error', function () {});
-    return ps;
-};
