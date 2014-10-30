@@ -3,16 +3,17 @@
 // a done event when finished
 
 var _ = require('lodash');
+var inherits = require('inherits');
+var util = require('util');
 
 module.exports = Sample;
 
-function Sample (frequency, opts) {
-  var self = this;
+function Sample (opts) {
+  
   if (!(this instanceof Sample)) return new Sample(frequency,opts);
   if (!opts) opts = {};
-  
-  this.frequency = frequency;
-  this.raw = [];
+
+  var self = this;
 
   //For 32bit Signed Integer PCM zero represents the minimum
   this.rangeMin = opts.min || 0;
@@ -30,12 +31,6 @@ Sample.prototype.scale = function(x, opts) {
 
   this.scaledRMS = (( (x-this.rangeMin) * (opts.newRangeMax-opts.newRangeMin)) / (this.rangeMax-this.rangeMin))+opts.newRangeMin;
   return this.scaledRMS;
-}
-
-Sample.prototype.sampling = function(buffer) {
-  if (!Buffer.isBuffer(buffer)) {return};
-  this.raw.push(buffer);
-  return this;
 }
 
 Sample.prototype.rms = function() {
@@ -67,8 +62,4 @@ Sample.prototype.getNativeRMS = function() {
 
 Sample.prototype.getScaledRMS = function() {
   return this.scaledRMS;
-}
-
-Sample.prototype.getSample = function() {
-  return {f: this.frequency, rms: this.scaledRMS};
 }

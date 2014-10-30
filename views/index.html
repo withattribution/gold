@@ -22,7 +22,8 @@
 var graph = new Rickshaw.Graph({
   element: document.querySelector("#chart"), 
   width: 1000, 
-  height: 200, 
+  height: 200,
+  renderer: 'line',
   series: 
     [{color: "blue",
        data: []
@@ -35,7 +36,8 @@ function gatherData(){
   var request = new XMLHttpRequest(); 
   request.open("GET", "/api/measure/spectrum", true); 
   request.onload = function() { 
-    if (request.status >= 200 && request.status < 400){ data = JSON.parse(request.responseText); 
+    if (request.status >= 200 && request.status < 400){ 
+      data = JSON.parse(request.responseText); 
 
       graph.series.addData(data);
       graph.render(); 
@@ -44,7 +46,6 @@ function gatherData(){
     else {}};
 
     request.onerror = function() {};
-
     request.send();  
 }
 

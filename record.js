@@ -1,5 +1,3 @@
-var inherits = require('inherits');
-var Readable = require('readable-stream').Readable;
 var spawn = require('child_process').spawn;
 
 module.exports = function (opts) {
@@ -19,8 +17,7 @@ R.prototype.record = function (opts) {
         't' : 's32',
         'b' : 32,
         'type' : 'coreaudio'
-    }).concat('default', '-q' ,'--type', 's32', '-c', '1', '-r', '44100', '-b', '32', '-'));    
-
+    }).concat('default', '-q' ,'-t', 's32', '-c', '1', '-r', this.rate, '-b', '32', '-'));
     return ps;
 };
 
