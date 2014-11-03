@@ -51,10 +51,12 @@ function gatherData(){
 }
 
 var socket = io.connect('http://localhost:9000');
-ss(socket).on('graph', function(stream) {
+ss(socket).on('graph',{objectMode:true}, function(stream) {
   console.log("graph graph graph");
   stream.on('data', function(data) {
-      console.log("hi hi hi: "+JSON.stringify(data));
+    console.log("hi hi hi: "+JSON.stringify(data));
+    graph.series[0].data.push(data);
+    graph.update();
   })
 });
 

@@ -34,7 +34,7 @@ function Beta(opts) {
   this.synth.play();
   this.record = Record(opts.rate).record();
 
-  this.samples = through({objectMode:false},write, end);
+  this.samples = through({objectMode:true},write, end);
 
   this.record.stdout.pipe(this.samples);
   return this.samples;
@@ -46,7 +46,7 @@ function Beta(opts) {
       y:RMS().calc(chunk)
     }
 
-    next(null,sample.toString());
+    next(null,sample);
 
     self.frequency += 50;
   }

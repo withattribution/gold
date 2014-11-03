@@ -7,7 +7,7 @@ var server = require('http').Server(app);
 var io = require('socket.io')(server);
 var ss = require('socket.io-stream');
 
-var stream = ss.createStream();
+var stream = ss.createStream({objectMode:true});
 
 var path = require('path');
 var util = require('util');
@@ -26,13 +26,12 @@ app.get('/*', function(req, res) {
 });
 
 io.on('connection', function (socket) {
-
   socket.on('disconnect', function (socket) {
-    console.log("get the cock out");
+    console.log("disconnected!");
     // beta().end();
   });
 
-  console.log("connected");
+  console.log("connected!");
   beta().pipe(stream);
   ss(socket).emit('graph', stream);
 
