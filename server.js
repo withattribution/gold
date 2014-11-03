@@ -5,11 +5,14 @@ var app = express();
 
 var server = require('http').Server(app);
 var io = require('socket.io')(server);
+var ss = require('socket.io-stream');
+
+var stream = ss.createStream();
 
 var path = require('path');
 var util = require('util');
 
-var record = require('./record');
+var beta = require('./beta');
 
 server.listen(9000);
 
@@ -24,13 +27,13 @@ app.get('/*', function(req, res) {
 
 io.on('connection', function (socket) {
 
-  // socket.on('start',function(){
-    //do something;
-  // });
+  socket.on('disconnect', function (socket) {
+    console.log("get the cock out");
+    // beta().end();
+  });
 
-  // var i = 0;
-  // setInterval(function(){
-  //   socket.emit('graph', { x: i, y:Math.random() } );
-  //   i++;
-  // }, 1000);
+  console.log("connected");
+  beta().pipe(stream);
+  ss(socket).emit('graph', stream);
+
 });

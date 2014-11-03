@@ -1,5 +1,6 @@
 <!--doctype html--> 
 <script src="/socket.io.js"></script>
+<script src="/socket.io-stream.js"></script>
 
 <script src="/d3.min.js"></script> 
 <script src="/d3.layout.min.js"></script>
@@ -27,7 +28,7 @@ var graph = new Rickshaw.Graph({
   series: 
     [{color: "blue",
        data: []
-  }]
+    }]
 });
 
 graph.render();
@@ -50,9 +51,11 @@ function gatherData(){
 }
 
 var socket = io.connect('http://localhost:9000');
-socket.on('graph', function (data) {
-  graph.series[0].data.push(data);
-  graph.update();
+ss(socket).on('graph', function(stream) {
+  console.log("graph graph graph");
+  stream.on('data', function(data) {
+      console.log("hi hi hi: "+JSON.stringify(data));
+  })
 });
 
 </script>

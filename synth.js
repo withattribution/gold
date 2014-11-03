@@ -11,8 +11,8 @@ module.exports = function (opts, fn) {
         opts = {};
     }
     if (!opts) opts = {};
-    var b = new S (opts, fn);
-    return b;
+    var s = new S (opts, fn);
+    return s;
 };
 
 function S (opts, fn) {

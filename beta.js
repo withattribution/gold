@@ -32,13 +32,11 @@ function Beta(opts) {
   });
 
   this.synth.play();
-
   this.record = Record(opts.rate).record();
 
   this.samples = through({objectMode:false},write, end);
 
   this.record.stdout.pipe(this.samples);
-
   return this.samples;
 
   function write(chunk, enc, next) {
@@ -56,6 +54,5 @@ function Beta(opts) {
   function end(next) {
     Function(); // NOOP FOR NOW
   }
-
-  
 }
+

@@ -32,14 +32,15 @@ function RMS (opts) {
     return scale(Math.sqrt(accumulator/sampleCount));
   }
 
-  function scale(x) {
-    if (self.rangeMax == self.rangeMin) { return self.scaleRangeMin; }
+  function scale(value) {
+    if (self.rangeMax == self.rangeMin)
+      return self.scaleRangeMin;
 
-    return (( (x-self.rangeMin) * (self.scaleRangeMax-self.scaleRangeMin)) / (self.rangeMax-self.rangeMin))+self.scaleRangeMin;
+    return (( (value-self.rangeMin) * (self.scaleRangeMax-self.scaleRangeMin)) / (self.rangeMax-self.rangeMin))+self.scaleRangeMin;
   }
 }
 
 RMS.prototype.calc = function(chunk) {
-  if (!Buffer.isBuffer(chunk)) { return NaN };
+  if (!Buffer.isBuffer(chunk)) { return NaN; };
   return this.sample(chunk);
 }
