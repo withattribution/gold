@@ -14,8 +14,6 @@ var dump = require('level-dump');
 var _db = level('./i<3gold.db');
 var db = sub(_db);
 
-
-
 var units = db.sublevel('monetary-units', {valueEncoding:'json'});
 var scans = db.sublevel('scans', {valueEncoding:'json'});
 
@@ -53,12 +51,12 @@ function scansForMonetaryUnit(db,value) {
 
 function ScanModel(monetaryKey,data,passed) {
   return {
-           key:monetaryKey,
-           value:{
-              unit:uuid.v1(),
-              data:data,
-              passed:passed
-            }
+           key:monetaryKey
+         , value:{
+             unit:uuid.v1()
+           , data:data
+           , passed:passed
+           }
          }
 }
 
@@ -67,11 +65,11 @@ function ScanModel(monetaryKey,data,passed) {
 **/
 function MonetaryUnitModel(userId) {
  return { 
-          key:''+uuid.v1()+util.now,
-          value:{
-            deviceId:process.env.GOLD_DEVICEID,
-            type:'coin',
-            userId:process.env.GOLD_USERID
+          key:''+uuid.v1()+util.now
+        , value:{
+            deviceId:process.env.GOLD_DEVICEID
+          , type:'coin'
+          , userId:process.env.GOLD_USERID
           }
         } 
 }

@@ -74,6 +74,21 @@ var d = new Date().toISOString()
 ✓create methods to create scan json
 ✓create methods to create scan monetary-unit json
 
+
+add finish state to beta
+rename beta
+
 add db to server js schema after saving
-profit
+add the ability to start a "canonical scan"
+
+overlay current scan with canonical scan
+
+calculate max amplitudes (range of 3-5)
+display max amplitudes on graph
+
+build interface to select a scan 
+build interface to start and stop scan
+
+
+
 
