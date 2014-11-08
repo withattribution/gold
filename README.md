@@ -42,7 +42,7 @@ value: {
   user: userId
 }
 
-scan!(ISO-8601-Date)
+!scan!monetary-unit(uuid)~(ISO-8601-Date)
 
 scan table 
 utf8:json
@@ -67,5 +67,13 @@ a coin has many scans
 
 ✓done
 
-create methods to create scan json
-create methods to create scan monetary-unit json
+Date format (iso-8601)
+
+var d = new Date().toISOString()
+
+✓create methods to create scan json
+✓create methods to create scan monetary-unit json
+
+add db to server js schema after saving
+profit
+

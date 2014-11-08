@@ -7,10 +7,14 @@ var timestamp = require('monotonic-timestamp');
 var uuid = require('node-uuid');
 
 var mapStream = require('map-stream');
+var util = require(./util);
 var dump = require('level-dump');
+
 
 var _db = level('./i<3gold.db');
 var db = sub(_db);
+
+
 
 var units = db.sublevel('monetary-units', {valueEncoding:'json'});
 var scans = db.sublevel('scans', {valueEncoding:'json'});
@@ -38,15 +42,39 @@ var dateM23 = timestamp();
 
 scans.put(monetaryUnitId2+'~'+dateM21,{monetaryUnit:monetaryUnitId2,data:[{x:0,y:0},{x:0,y:0}],passed:true});
 scans.put(monetaryUnitId2+'~'+dateM22,{monetaryUnit:monetaryUnitId2,data:[{x:1,y:0},{x:1,y:0}],passed:false});
-scans.put(monetaryUnitId2+'~'+dateM23,{monetaryUnit:monetaryUnitId2,data:[{x:1,y:0},{x:1,y:0}],passed:true}, scansForUnit(monetaryUnitId1));
+scans.put(monetaryUnitId2+'~'+dateM23,{monetaryUnit:monetaryUnitId2,data:[{x:1,y:0},{x:1,y:0}],passed:true}, scansForUnit(scans,monetaryUnitId1));
 
 // dump(_db);
 
-function scansForMonetaryUnit(value) {
-  scans.createValueStream({'gte':value, 'lte':value+'xFF'})
+function scansForMonetaryUnit(db,value) {
+  db.createValueStream({'gte':value, 'lte':value+'xFF'})
     .on('data', console.log);
 }
 
+function ScanModel(monetaryKey,data,passed) {
+  return {
+           key:monetaryKey,
+           value:{
+              unit:uuid.v1(),
+              data:data,
+              passed:passed
+            }
+         }
+}
+
+/**
+  think about moving type and userid into the monetary-unit key
+**/
+function MonetaryUnitModel(userId) {
+ return { 
+          key:''+uuid.v1()+util.now,
+          value:{
+            deviceId:process.env.GOLD_DEVICEID,
+            type:'coin',
+            userId:process.env.GOLD_USERID
+          }
+        } 
+}
 
 
 
