@@ -18,7 +18,6 @@ an accepted set of scans has a unique id
 a device can scan many coins/items
 a single or group of coins has a user associated with it
 
-
 leveldb should be able to:
 
 query all scans from all devices in a coin-shop from a range of dates
@@ -59,34 +58,14 @@ a coin shop has many devices
 an owner has many coins
 a coin has many scans
 
-so first thing make some coins...
-then make some scans...
+✓so first thing make some coins...
+✓then make some scans...
 
-then pull all coins 
-then pull all scans
-then pull all scans for a coin
+✓then pull all coins 
+✓then pull all scans
+✓then pull all scans for a coin
 
-done
+✓done
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+create methods to create scan json
+create methods to create scan monetary-unit json
