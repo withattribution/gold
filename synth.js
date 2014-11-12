@@ -24,8 +24,9 @@ function S (opts, fn) {
 
     this.t = 0;
     this.i = 0;
-
     this._ticks = 0;
+
+    this.ps;
 }
 
 inherits(S, Readable);
@@ -62,6 +63,11 @@ S.prototype.end = function () {
     Readable.prototype.push.call(this, null);
 };
 
+S.prototype.kill = function(signal){
+  this.end();
+  this.ps.kill(signal);
+};
+
 function mergeArgs (opts, args) {
     Object.keys(opts || {}).forEach(function (key) {
         args[key] = opts[key];
@@ -86,8 +92,8 @@ S.prototype.play = function (opts) {
 
 S.prototype._spawn = function (cmd, args) {
     var self = this;
-    var ps = spawn(cmd, args);
-    ps.on('error', function (err) {
+    this.ps = spawn(cmd, args);
+    this.ps.on('error', function (err) {
         if (err.code === 'ENOENT') {
             self.emit('error', new Error(
                 'Failed to launch the `' + cmd + '` command.\n'
@@ -97,15 +103,15 @@ S.prototype._spawn = function (cmd, args) {
         }
         else self.emit('error', err);
     });
-    ps.stdin.on('error', function () {});
+    this.ps.stdin.on('error', function () {});
 
-    // ps.stderr.on('data',function(err){
+    // this.stderr.on('data',function(err){
     //   console.log('REC ERR: ---------------------------------- \n'
     //             +err
     //             +'\nREC ERR: ********************************** \n');
     // });
 
-    return ps;
+    return this.ps;
 };
 
 function signed (n) {

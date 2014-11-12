@@ -8,6 +8,7 @@ module.exports = function (opts) {
 
 function R (opts) {
     this.rate = opts.rate || 44100;
+    this.ps;
 }
 
 R.prototype.record = function (opts) {
@@ -34,8 +35,8 @@ function mergeArgs (opts, args) {
 
 R.prototype._spawn = function (cmd, args) {
     var self = this;
-    var ps = spawn(cmd, args);
-    ps.on('error', function (err) {
+    this.ps = spawn(cmd, args);
+    this.ps.on('error', function (err) {
         if (err.code === 'ENOENT') {
             self.emit('error', new Error(
                 'Failed to launch the `' + cmd + '` command.\n'
@@ -45,8 +46,12 @@ R.prototype._spawn = function (cmd, args) {
         }
         else self.emit('error', err);
     });
-    ps.stdin.on('error', function () {});
-    return ps;
+    this.ps.stdin.on('error', function () {});
+    return this.ps;
+};
+
+R.prototype.kill = function(signal){
+  this.ps.kill(signal);
 };
 
 // sox -c 1 -r 44100 -b 32 --type coreaudio default --type raw -c 1 -r 44100 -b 32 -p

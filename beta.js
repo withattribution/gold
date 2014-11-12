@@ -32,12 +32,14 @@ function Beta(opts) {
   });
 
   this.synth.play();
+
   this.record = Record(opts.rate).record();
 
-  this.samples = through({objectMode:true},write, end);
+  this.samples = through({objectMode:true}, write, end);
 
   this.record.stdout.pipe(this.samples);
-  return this.samples;
+
+  return this;
 
   function write(chunk, enc, next) {
 
@@ -56,3 +58,11 @@ function Beta(opts) {
   }
 }
 
+Beta.prototype.through = function(){
+  return this.samples;
+}
+
+Beta.prototype.stop = function() {
+  this.synth.kill();
+  this.record.kill();
+}

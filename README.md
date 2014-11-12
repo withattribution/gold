@@ -78,6 +78,10 @@ var d = new Date().toISOString()
 add finish state to beta
 rename beta
 
+-- to accomplish this add a private reference to the child process of both
+the record and play sox instance and then a function that references both and kills them -- inside beta reference to the entire function is returned with access to the stream through a function and the prototypes to stop both the record and play -- then add the db call to save in a persitent state.
+
+
 add db to server js schema after saving
 add the ability to start a "canonical scan"
 
