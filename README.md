@@ -74,25 +74,32 @@ var d = new Date().toISOString()
 ✓create methods to create scan json
 ✓create methods to create scan monetary-unit json
 
-
-add finish state to beta
+✓add finish state to beta
 rename beta
 
--- to accomplish this add a private reference to the child process of both
+✓-- to accomplish this add a private reference to the child process of both
 the record and play sox instance and then a function that references both and kills them -- inside beta reference to the entire function is returned with access to the stream through a function and the prototypes to stop both the record and play -- then add the db call to save in a persitent state.
 
+✓add db to server js schema after saving
 
-add db to server js schema after saving
-add the ability to start a "canonical scan"
+✓write the db connection helper, then pass that to various model classes 
+to create the user / scan models 
 
-overlay current scan with canonical scan
+✓--> start scan (create MonetaryUnitModel)
+✓--> do scan (save as ScanModel)
 
 calculate max amplitudes (range of 3-5)
+
+need interface to complete the following
+--> repeat
+--> list scans for certain monetary unit
+add the ability to start a "canonical scan"
+add ability to make repeat scans (solve already sent stream error)
+
+overlay current scan with canonical scan
+look into making current scan fixed width
+
 display max amplitudes on graph
 
 build interface to select a scan 
 build interface to start and stop scan
-
-
-
-

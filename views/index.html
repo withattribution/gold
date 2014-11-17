@@ -7,50 +7,44 @@
 <script src="/rickshaw.min.js"></script>
 
  <style type="text/css">
-   #demo {margin-top:50px; width:400px; height:100px; color:blue;}
-   .spectrumButton {text-align: center;}
-
+   .mainButtons {text-align: center;}
+   #scanButton {margin-top:50px; width:400px; height:100px; color:blue;}
+   #saveButton {margin-top:50px; width:100px; height:100px; color:red;}
  </style>
 
 <div id="chart"></div>
 
-<div class="spectrumButton">
-  <button id="demo" onclick="gatherData()">READ SPECTRUM</button>
+<div class="mainButtons">
+  <button id="scanButton" onclick="gatherData()">READ SPECTRUM</button>
+  <button id="saveButton" onclick="saveData()">SAVE</button>
 </div>
 
 <script> 
-
 var graph = new Rickshaw.Graph({
   element: document.querySelector("#chart"), 
-  width: 1000, 
-  height: 200,
+  // width: 1000, 
+  height: 600,
   renderer: 'line',
   series: 
-    [{color: "blue",
+    [{
+      color: "blue",
        data: []
     }]
 });
 
 graph.render();
 
+var socket = io();
+// var socket = io.connect('http://localhost:9000');
+
 function gatherData(){
-  var request = new XMLHttpRequest(); 
-  request.open("GET", "/api/measure/spectrum", true); 
-  request.onload = function() { 
-    if (request.status >= 200 && request.status < 400){ 
-      data = JSON.parse(request.responseText); 
-
-      graph.series.addData(data);
-      graph.render(); 
-
-    } 
-    else {}};
-
-    request.onerror = function() {};
-    request.send();  
+  socket.emit('scan');
 }
 
-var socket = io.connect('http://localhost:9000');
+function saveData(){
+  socket.emit('save');
+}
+
 ss(socket).on('graph',{objectMode:true}, function(stream) {
   console.log("graph graph graph");
   stream.on('data', function(data) {
