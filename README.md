@@ -86,20 +86,27 @@ the record and play sox instance and then a function that references both and ki
 to create the user / scan models 
 
 ✓--> start scan (create MonetaryUnitModel)
+
 ✓--> do scan (save as ScanModel)
 
-calculate max amplitudes (range of 3-5)
+✓calculate max amplitudes (range of 3-5)
 
 need interface to complete the following
 --> repeat
 --> list scans for certain monetary unit
+
 add the ability to start a "canonical scan"
+
 add ability to make repeat scans (solve already sent stream error)
 
 overlay current scan with canonical scan
+
 look into making current scan fixed width
 
 display max amplitudes on graph
 
 build interface to select a scan 
+
 build interface to start and stop scan
+
+✓Jesus Ⓢaves

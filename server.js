@@ -55,7 +55,7 @@ io.on('connection', function (socket) {
   console.log("connected!");
 });
 
-function saveScan(data){ 
+function saveScan(data){
   var scan = Scan(key || 'blah blah', data, true);
 
   leveldb.open(function (err,db){
