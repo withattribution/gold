@@ -23,7 +23,7 @@ module.exports = function(dbLocation) {
   leveldb.close = function done(err, cb) {
     if (err) 
       console.log("just log the error: ",err);
-    dump(leveldb._db);
+
     console.log("closing _db");
     leveldb._db && leveldb._db.close(cb);
   }

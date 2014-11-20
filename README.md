@@ -2,7 +2,7 @@
 
 basic interface to scan a sample and compare it to the reference sample
 
-requires a non-volatile storage method like a database
+✓requires a non-volatile storage method like a database
 
 peak finding and delta-F between 3 major peaks
 
@@ -91,11 +91,17 @@ to create the user / scan models
 
 ✓calculate max amplitudes (range of 3-5)
 
+make more than one scan
+
+make a reference scan
+
+compare a scan to a reference scan
+
 need interface to complete the following
 --> repeat
 --> list scans for certain monetary unit
 
-add the ability to start a "canonical scan"
+add the ability to start a "canonical scan" thinking this would be under a /reference scan
 
 add ability to make repeat scans (solve already sent stream error)
 
@@ -104,6 +110,8 @@ overlay current scan with canonical scan
 look into making current scan fixed width
 
 display max amplitudes on graph
+
+build interface to list all scans for a coin
 
 build interface to select a scan 
 

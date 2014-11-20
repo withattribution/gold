@@ -15,9 +15,9 @@ var Unit = require('./monetary');
 var Scan = require('./scan');
 var sublevels = require('./sublevels');
 
-var key;
-
 var B = require('./beta');
+
+var key;
 
 server.listen(9000);
 
@@ -44,15 +44,17 @@ io.on('connection', function (socket) {
   })
 
   socket.on('disconnect', function (socket) {
-    console.log("disconnected!: ",socket);
+    console.log("disconnected!");
+    //check to see if beta has piped streams in it to stop
     beta.stop();
   });
 
   beta.on('finished',function(samples){
     saveScan(samples);
+    socket.emit('done');
   });
 
-  console.log("connected!");
+  console.log("connected!: ");
 });
 
 function saveScan(data){

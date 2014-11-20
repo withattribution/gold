@@ -24,34 +24,51 @@ var graph = new Rickshaw.Graph({
   element: document.querySelector("#chart"), 
   // width: 1000, 
   height: 600,
-  renderer: 'line',
+  min: 0,
+  max: 1.0,
+  renderer: 'area',
   series: 
     [{
-      color: "blue",
+      color: 'rgba(0,0,255,0.8)',
        data: []
+    },
+    {
+      color: 'rgba(0,128,255,0.3)',
+      data:[]
     }]
 });
-
+ 
+graph.renderer.unstack = true;
 graph.render();
 
-var socket = io();
-// var socket = io.connect('http://localhost:9000');
+var socket = io.connect('http://localhost:9000');
 
-function gatherData(){
+function gatherData() {
+  !socket.connected && socket.io.reconnect();
+
   socket.emit('scan');
+
+  ss(socket).on('graph',{objectMode:true}, function(stream) {
+    stream.on('data', function(data) {
+      graph.series[0].data.push(data);
+      graph.update();
+    })
+  });
+
+  socket.on('done',function(){
+    socket.io.disconnect();
+  });
 }
 
 function saveData(){
   socket.emit('save');
 }
 
-ss(socket).on('graph',{objectMode:true}, function(stream) {
-  console.log("graph graph graph");
-  stream.on('data', function(data) {
-    console.log("hi hi hi: "+JSON.stringify(data));
-    graph.series[0].data.push(data);
-    graph.update();
-  })
-});
+
+
+
+
+
+
 
 </script>

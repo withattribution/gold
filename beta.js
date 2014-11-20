@@ -75,6 +75,7 @@ Beta.prototype.listen = function(){
 // }
 
 Beta.prototype.stop = function() {
+  //check to see if beta has piped streams in it to stop
   this.synth.kill();
   this.record.kill();
 }
