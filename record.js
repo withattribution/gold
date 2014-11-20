@@ -8,7 +8,6 @@ module.exports = function (opts) {
 
 function R (opts) {
     this.rate = opts.rate || 44100;
-    this.ps;
 }
 
 R.prototype.record = function (opts) {
@@ -51,7 +50,7 @@ R.prototype._spawn = function (cmd, args) {
 };
 
 R.prototype.kill = function(signal){
-  this.ps.kill(signal);
+  this.ps && this.ps.kill(signal);
 };
 
 // sox -c 1 -r 44100 -b 32 --type coreaudio default --type raw -c 1 -r 44100 -b 32 -p

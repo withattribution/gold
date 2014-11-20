@@ -1,14 +1,3 @@
-//this will play record and sample in as elegant a way as I can muster
-
-//I need the record function to directly manage the rate at which the play 
-// functions change the frequency, so they need to be slightly coupled
-
-//this returns a stream of RMS values
-
-// so starts the synth, then starts the record 
-// possibly ditches the first sample (or not)
-// then filters the stream and outputs the rms values
-
 var through = require('through2');
 var Synth = require('./synth');
 var Record = require('./record');
@@ -43,7 +32,6 @@ function Beta(opts) {
     if (self.frequency == self.opts.maxFreq) {
       self.emit('finished',self.samples);
       self.stop();
-      // return;
     }
 
     var sample = {
@@ -70,12 +58,7 @@ Beta.prototype.listen = function(){
   return this.through;
 }
 
-// Beta.prototype.through = function(){
-//   return this.samples;
-// }
-
 Beta.prototype.stop = function() {
-  //check to see if beta has piped streams in it to stop
-  this.synth.kill();
-  this.record.kill();
+  this.synth && this.synth.kill();
+  this.record && this.record.kill();
 }

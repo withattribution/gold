@@ -25,8 +25,6 @@ function S (opts, fn) {
     this.t = 0;
     this.i = 0;
     this._ticks = 0;
-
-    this.ps;
 }
 
 inherits(S, Readable);
@@ -65,7 +63,7 @@ S.prototype.end = function () {
 
 S.prototype.kill = function(signal){
   this.end();
-  this.ps.kill(signal);
+  this.ps && this.ps.kill(signal);
 };
 
 function mergeArgs (opts, args) {

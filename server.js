@@ -32,20 +32,18 @@ app.get('/*', function(req, res) {
 
 io.on('connection', function (socket) {
 
-  var stream;
   var beta = new B();
 
   socket.on('scan', function(){
     addUnit();
 
-    stream = ss.createStream({objectMode:true});
+    var stream = ss.createStream({objectMode:true});
     beta.listen().pipe(stream);
     ss(socket).emit('graph', stream);
   })
 
   socket.on('disconnect', function (socket) {
     console.log("disconnected!");
-    //check to see if beta has piped streams in it to stop
     beta.stop();
   });
 
