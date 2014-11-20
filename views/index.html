@@ -24,7 +24,7 @@
 var _series =
 [
   {
-    color: 'rgba(0,0,255,0.8)',
+    color: 'rgba(48,48,48,0.8)',
     data: []
   }
 ]
@@ -42,12 +42,22 @@ var graph = new Rickshaw.Graph({
 });
 
 function addSeries() {
+  var color = randomColor();
+
   _series.push({
     data:[]
-  , color: '#6060c0'
+  , color: color
   });
 
   graphIndex++;
+}
+
+function genNum(){
+  return Math.floor(Math.random() * 256);
+}
+
+function randomColor(){
+  return 'rgba('+genNum()+','+genNum()+','+genNum()+',0.8)'
 }
 
 graph.renderer.unstack = true;
@@ -57,7 +67,7 @@ var socket = io();
 
 function gatherData() {
   !socket.connected && socket.io.reconnect();
-  
+
   socket.emit('scan');
 }
 
