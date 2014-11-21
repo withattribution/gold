@@ -82,8 +82,7 @@ the record and play sox instance and then a function that references both and ki
 
 ✓add db to server js schema after saving
 
-✓write the db connection helper, then pass that to various model classes 
-to create the user / scan models 
+✓write the db connection helper, then pass that to various model classes to create the user / scan models 
 
 ✓--> start scan (create MonetaryUnitModel)
 
@@ -95,19 +94,14 @@ to create the user / scan models
 
 ✓need interface to complete the following
 ✓--> repeat
---> list scans for certain monetary unit
 
-make a reference scan
+--> list scans for certain monetary unit (do this now)
+
+✓make a reference scan
 
 compare a scan to a reference scan
 
-add the ability to start a "canonical scan" thinking this would be under a /reference scan
-
 ✓add ability to make repeat scans (solve already sent stream error)
-
-overlay current scan with canonical scan
-
-look into making current scan fixed width
 
 display max amplitudes on graph
 

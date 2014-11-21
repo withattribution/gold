@@ -7,7 +7,12 @@ var subs = module.exports = function (db) {
   sublevels.gold = {
     units   : db.sublevel('monetary-units', { valueEncoding : 'json' })
   , scans   : db.sublevel('scans',          { valueEncoding : 'json' })  
-  };
+  }
+
+  sublevels.reference = {
+    units   : db.sublevel('monetary-units', { valueEncoding : 'json' })
+  , scans   : db.sublevel('scans',          { valueEncoding : 'json' })
+  }
 
   return sublevels;
 }

@@ -10,14 +10,16 @@ var ss = require('socket.io-stream');
 var path = require('path');
 var util = require('util');
 
-var leveldb = require('./db');
 var Unit = require('./monetary');
 var Scan = require('./scan');
+
+var leveldb = require('./db');
 var sublevels = require('./sublevels');
 
 var B = require('./beta');
 
 var key;
+var isReference = false;
 
 server.listen(9000);
 
@@ -34,7 +36,10 @@ io.on('connection', function (socket) {
 
   var beta = new B();
 
-  socket.on('scan', function(){
+  socket.on('scan', function(opts){
+    isReference = opts.reference || false;
+    isReference && console.log('making a reference scan!');
+
     addUnit();
 
     var stream = ss.createStream({objectMode:true});
@@ -44,22 +49,24 @@ io.on('connection', function (socket) {
 
   socket.on('disconnect', function (socket) {
     console.log("disconnected!");
+    isReference = false;
     beta.stop();
   });
 
   beta.on('finished',function(samples){
     saveScan(samples);
     socket.emit('done');
+    isReference = false;
   });
 
   console.log("connected!: ");
 });
 
-function saveScan(data){
+function saveScan(data) {
   var scan = Scan(key || 'blah blah', data, true);
 
   leveldb.open(function (err,db){
-    var namespace = sublevels(db).gold;
+    var namespace = setNamespace(db);
     namespace.scans.put(scan.key, scan.value, function(err){
       leveldb.close();
     })
@@ -71,9 +78,14 @@ function addUnit() {
   key = unit.key;
 
   leveldb.open(function (err, db){
-    var namespace = sublevels(db).gold;
+    var namespace = setNamespace(db);
     namespace.units.put(unit.key, unit.value, function(err){
       leveldb.close();
     })
   })
+}
+
+function setNamespace(db){
+    if (isReference) return sublevels(db).reference;
+    else return sublevels(db).gold;
 }

@@ -9,14 +9,14 @@
  <style type="text/css">
    .mainButtons {text-align: center;}
    #scanButton {margin-top:50px; width:400px; height:100px; color:blue;}
-   #saveButton {margin-top:50px; width:100px; height:100px; color:red;}
+   #saveButton {margin-top:50px; width:200px; height:100px; color:red;}
  </style>
 
 <div id="chart"></div>
 
 <div class="mainButtons">
-  <button id="scanButton" onclick="gatherData()">READ SPECTRUM</button>
-  <button id="saveButton" onclick="saveData()">SAVE</button>
+  <button id="scanButton" onclick="scan()">SCAN</button>
+  <button id="saveButton" onclick="referenceScan()">REFERENCE SCAN</button>
 </div>
 
 <script> 
@@ -24,10 +24,10 @@
 var _series =
 [
   {
-    color: 'rgba(48,48,48,0.8)',
-    data: []
+    color: randomColor()//'rgba(48,48,48,0.8)',
+  , data: []
   }
-]
+];
 
 var graphIndex = 0;
 
@@ -35,18 +35,17 @@ var graph = new Rickshaw.Graph({
   element: document.querySelector("#chart")
   // , width: 1000
   , height: 600
-  , min: 0
+  , min: 0.0
   , max: 1.0
   , renderer: 'area'
   , series: _series
 });
 
 function addSeries() {
-  var color = randomColor();
-
+  // var color = randomColor();
   _series.push({
     data:[]
-  , color: color
+  , color: randomColor()
   });
 
   graphIndex++;
@@ -65,7 +64,7 @@ graph.render();
 
 var socket = io();
 
-function gatherData() {
+function scan() {
   !socket.connected && socket.io.reconnect();
 
   socket.emit('scan');
@@ -85,8 +84,8 @@ socket.on('done',function(){
   addSeries();
 });
 
-function saveData(){
-  socket.emit('save');
+function referenceScan(){
+  socket.emit('scan',{reference:true});
 }
 
 </script>
