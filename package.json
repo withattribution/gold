@@ -23,11 +23,20 @@
   },
   "homepage": "https://github.com/withattribution/gold",
   "dependencies": {
-    "express": "~4.8.7",
-    "uuid": "~1.4.1",
     "ejs": "~1.0.0",
-    "through": "~2.3.6",
+    "express": "~4.8.7",
+    "inherits": "~2.0.1",
+    "level": "^0.18.0",
+    "level-dump": "^0.4.0",
+    "level-sublevel": "^6.3.15",
+    "lodash": "^2.4.1",
+    "node-uuid": "^1.4.1",
+    "readable-stream": "^1.0.33",
+    "socket.io": "^1.2.1",
+    "socket.io-stream": "^0.6.0",
     "split": "~0.3.0",
-    "inherits": "~2.0.1"
+    "through": "~2.3.6",
+    "through2": "^0.6.3",
+    "uuid": "~1.4.1"
   }
 }
