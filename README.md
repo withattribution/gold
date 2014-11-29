@@ -95,20 +95,24 @@ the record and play sox instance and then a function that references both and ki
 ✓need interface to complete the following
 ✓--> repeat
 
---> list scans for certain monetary unit (do this now)
-
 ✓make a reference scan
 
-compare a scan to a reference scan
-
 ✓add ability to make repeat scans (solve already sent stream error)
+
+✓clear the previous scans on the new scan
+
+send the monetary-unit-key to client
+
+send the top 3 frequencies to the client on finish
+
+--> list scans for certain monetary unit (do this now)
+
+compare a scan to a reference scan
 
 display max amplitudes on graph
 
 build interface to list all scans for a coin
 
 build interface to select a scan 
-
-build interface to start and stop scan
 
 ✓Jesus Ⓢaves

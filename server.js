@@ -8,6 +8,7 @@ var io = require('socket.io')(server);
 var ss = require('socket.io-stream');
 
 var path = require('path');
+var uuid = require('node-uuid');
 var util = require('util');
 
 var Unit = require('./monetary');
@@ -40,7 +41,7 @@ io.on('connection', function (socket) {
     isReference = opts.reference || false;
     isReference && console.log('making a reference scan!');
 
-    addUnit();
+    opts.initialScan && addUnit();
 
     var stream = ss.createStream({objectMode:true});
     beta.listen().pipe(stream);
@@ -67,20 +68,30 @@ function saveScan(data) {
 
   leveldb.open(function (err,db){
     var namespace = setNamespace(db);
-    namespace.scans.put(scan.key, scan.value, function(err){
-      leveldb.close();
+    namespace.scans.put(
+      scan.key
+    , scan.value
+    , function(err){
+        leveldb.close();
     })
   })
 }
 
+function generateKey() {
+  key = uuid.v1();
+}
+
 function addUnit() {
-  var unit = Unit('userID');
-  key = unit.key;
+  generateKey();
+  var unit = Unit('userID',key);
 
   leveldb.open(function (err, db){
     var namespace = setNamespace(db);
-    namespace.units.put(unit.key, unit.value, function(err){
-      leveldb.close();
+    namespace.units.put(
+      unit.key
+    , unit.value
+    , function(err){
+        leveldb.close();
     })
   })
 }

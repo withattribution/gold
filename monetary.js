@@ -1,16 +1,14 @@
 'use strict';
 
-var uuid = require('node-uuid')
-  , util = require('./util')
-  ;
+var util = require('./util');
 
 /**
   think about moving type and userid into the monetary-unit key
 **/
 
-function MonetaryUnitModel(userId) {
+function MonetaryUnitModel(userId, uuid) {
  return { 
-          key:''+uuid.v1()+util.now
+          key:''+uuid+util.now
         , value:{
             deviceId:process.env.GOLD_DEVICEID
           , type:'coin'

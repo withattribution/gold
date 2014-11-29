@@ -7,42 +7,57 @@
 <script src="/rickshaw.min.js"></script>
 
  <style type="text/css">
-   .mainButtons {text-align: center;}
-   #scanButton {margin-top:50px; width:400px; height:100px; color:blue;}
-   #saveButton {margin-top:50px; width:200px; height:100px; color:red;}
+   #mainButtons {text-align: left; float:left; margin-top:20px;}
+   #scanButton {width:400px; height:100px; color:blue;}
+   #reScanButton {width:200px; height:100px; color:black;}
+   #saveButton {width:200px; height:100px; color:red;}
+   .peaks {}
  </style>
 
 <div id="chart"></div>
 
-<div class="mainButtons">
-  <button id="scanButton" onclick="scan()">SCAN</button>
+<div id="mainButtons">
+  <button id="scanButton" onclick="scan()">NEW SCAN</button>
+  <button id="reScanButton" onclick="reScan()" disabled>RESCAN</button>
   <button id="saveButton" onclick="referenceScan()">REFERENCE SCAN</button>
 </div>
 
 <script> 
 
-var _series =
-[
-  {
-    color: randomColor()//'rgba(48,48,48,0.8)',
-  , data: []
+var graphIndex = 0
+  , _series = [];
+
+var graph = generateGraph();
+    graph.renderer.unstack = true;
+    graph.render();
+
+function generateGraph(){
+  _series = [];
+
+  _series.push({
+    data:[]
+  , color: randomColor()
+  });
+
+  graphIndex = 0;
+  // Removing all children from an element
+  var element = document.querySelector("#chart");
+  while (element.firstChild) {
+    element.removeChild(element.firstChild);
   }
-];
 
-var graphIndex = 0;
-
-var graph = new Rickshaw.Graph({
-  element: document.querySelector("#chart")
-  // , width: 1000
-  , height: 600
-  , min: 0.0
-  , max: 1.0
-  , renderer: 'area'
-  , series: _series
-});
+  return new Rickshaw.Graph({
+    element: document.querySelector("#chart")
+    // , width: 1000
+    , height: 500
+    , min: 0.0
+    , max: 1.0
+    , renderer: 'area'
+    , series: _series
+  });
+}
 
 function addSeries() {
-  // var color = randomColor();
   _series.push({
     data:[]
   , color: randomColor()
@@ -59,20 +74,25 @@ function randomColor(){
   return 'rgba('+genNum()+','+genNum()+','+genNum()+',0.8)'
 }
 
-graph.renderer.unstack = true;
-graph.render();
-
 var socket = io();
 
 function scan() {
   !socket.connected && socket.io.reconnect();
 
-  socket.emit('scan');
+  if (graphIndex > 0) {
+    graph = generateGraph();
+    graph.renderer.unstack = true;
+    graph.render();
+  }
+
+  socket.emit('scan',{reference:false,initialScan:true});
+  document.getElementById('reScanButton').disabled = true;
 }
 
 ss(socket).on('graph',{objectMode:true}, function(stream) {
 
   stream.on('data', function(data) {
+    console.log("data");
     graph.series[graphIndex].data.push(data);
     graph.update();
   })
@@ -82,7 +102,15 @@ ss(socket).on('graph',{objectMode:true}, function(stream) {
 socket.on('done',function(){
   socket.io.disconnect();
   addSeries();
+  //enable rescan button
+  document.getElementById('reScanButton').disabled = false;
 });
+
+function reScan(){
+  !socket.connected && socket.io.reconnect();
+  
+  socket.emit('scan',{initialScan:false});
+}
 
 function referenceScan(){
   socket.emit('scan',{reference:true});
