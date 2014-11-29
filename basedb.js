@@ -24,7 +24,7 @@ module.exports = function(dbLocation) {
     if (err) 
       console.log("just log the error: ",err);
 
-    console.log("closing _db");
+    // console.log("closing _db");
     leveldb._db && leveldb._db.close(cb);
   }
 

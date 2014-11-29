@@ -1,14 +1,12 @@
 'use strict';
 
-var util = require('./util');
-
 /**
   think about moving type and userid into the monetary-unit key
 **/
 
 function MonetaryUnitModel(userId, uuid) {
  return { 
-          key:''+uuid+util.now
+          key:''+uuid
         , value:{
             deviceId:process.env.GOLD_DEVICEID
           , type:'coin'
@@ -17,7 +15,7 @@ function MonetaryUnitModel(userId, uuid) {
         } 
 }
 
-function scansForMonetaryUnit(db,value) {
+function scansForMonetaryUnit(db, value) {
   db.createValueStream({'gte':value, 'lte':value+'xFF'})
     .on('data', console.log);
 }

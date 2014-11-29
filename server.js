@@ -19,8 +19,8 @@ var sublevels = require('./sublevels');
 
 var B = require('./beta');
 
-var key;
-var isReference = false;
+var key
+  , isReference = false;
 
 server.listen(9000);
 
@@ -55,18 +55,20 @@ io.on('connection', function (socket) {
   });
 
   beta.on('finished',function(samples){
-    saveScan(samples);
-    socket.emit('done');
+    var currentScan = Scan(''+key+util.now, key, samples, true);
+    saveScan(currentScan);
+    
+    socket.emit('done',currentScan);
+
     isReference = false;
   });
 
   console.log("connected!: ");
 });
 
-function saveScan(data) {
-  var scan = Scan(key || 'blah blah', data, true);
+function saveScan(scan) {
 
-  leveldb.open(function (err,db){
+  leveldb.open(function (err, db){
     var namespace = setNamespace(db);
     namespace.scans.put(
       scan.key
@@ -77,14 +79,12 @@ function saveScan(data) {
   })
 }
 
-function generateKey() {
-  key = uuid.v1();
-}
-
 function addUnit() {
-  generateKey();
-  var unit = Unit('userID',key);
-
+  
+  var unit = Unit('userID',uuid.v1());
+  
+  key = unit.key;
+  
   leveldb.open(function (err, db){
     var namespace = setNamespace(db);
     namespace.units.put(

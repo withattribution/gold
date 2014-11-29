@@ -101,9 +101,11 @@ the record and play sox instance and then a function that references both and ki
 
 ✓clear the previous scans on the new scan
 
-send the monetary-unit-key to client
+✓send the monetary-unit-key to client
 
-send the top 3 frequencies to the client on finish
+✓send the top 3 frequencies to the client on finish
+
+✓ok it's too late to do this now but change the monetary scan key to the uuid and the scan key to the uuid+timestamp!
 
 --> list scans for certain monetary unit (do this now)
 
@@ -113,6 +115,6 @@ display max amplitudes on graph
 
 build interface to list all scans for a coin
 
-build interface to select a scan 
+build interface to select a scan
 
 ✓Jesus Ⓢaves

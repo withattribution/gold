@@ -7,7 +7,7 @@
 <script src="/rickshaw.min.js"></script>
 
  <style type="text/css">
-   #mainButtons {text-align: left; float:left; margin-top:20px;}
+   #mainButtons {text-align:left; float:left; margin-top:10px;}
    #scanButton {width:400px; height:100px; color:blue;}
    #reScanButton {width:200px; height:100px; color:black;}
    #saveButton {width:200px; height:100px; color:red;}
@@ -99,7 +99,8 @@ ss(socket).on('graph',{objectMode:true}, function(stream) {
 
 });
 
-socket.on('done',function(){
+socket.on('done',function(val){
+  console.log('the value: ',val);
   socket.io.disconnect();
   addSeries();
   //enable rescan button
