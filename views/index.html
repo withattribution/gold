@@ -8,7 +8,7 @@
 
  <style type="text/css">
    #mainButtons {text-align:left; float:left; margin-top:10px;}
-   #scanButton {width:400px; height:100px; color:blue;}
+   #scanButton {width:200px; height:100px; color:blue;}
    #reScanButton {width:200px; height:100px; color:black;}
    #saveButton {width:200px; height:100px; color:red;}
    .peaks {}
@@ -25,7 +25,9 @@
 <script> 
 
 var graphIndex = 0
-  , _series = [];
+  , _series = []
+  , socket = io()
+  ;
 
 var graph = generateGraph();
     graph.renderer.unstack = true;
@@ -74,10 +76,8 @@ function randomColor(){
   return 'rgba('+genNum()+','+genNum()+','+genNum()+',0.8)'
 }
 
-var socket = io();
-
 function scan() {
-  !socket.connected && socket.io.reconnect();
+  reconnect();
 
   if (graphIndex > 0) {
     graph = generateGraph();
@@ -108,12 +108,27 @@ socket.on('done',function(val){
 });
 
 function reScan(){
-  !socket.connected && socket.io.reconnect();
+  reconnect();
   
   socket.emit('scan',{initialScan:false});
 }
 
+function reconnect(){
+  !socket.connected && socket.io.reconnect();
+}
+
+function hideAllGraphs(){
+  //stubbed out method for gathering and hiding plots
+  //so that they can be invidividually toggled
+  graph.series.forEach( function(s) {
+    console.log('s: ',s.path);
+    s.path && s.path.setAttribute("opacity", 0);//style("opacity", 0);
+  });
+}
+
 function referenceScan(){
+  reconnect();
+
   socket.emit('scan',{reference:true});
 }
 

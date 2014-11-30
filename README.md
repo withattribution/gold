@@ -107,7 +107,7 @@ the record and play sox instance and then a function that references both and ki
 
 ✓ok it's too late to do this now but change the monetary scan key to the uuid and the scan key to the uuid+timestamp!
 
---> list scans for certain monetary unit (do this now)
+list scans for certain monetary unit (do this now)
 
 compare a scan to a reference scan
 
