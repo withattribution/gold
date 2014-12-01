@@ -81,7 +81,7 @@ S.prototype.play = function (opts) {
     var ps = this._spawn('play', mergeArgs(opts, {
         'c': 1,
         'r': this.rate,
-        't': 's32'
+        'b': '32'
     }).concat('-', '-q'));
 
     this.pipe(ps.stdin);

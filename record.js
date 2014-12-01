@@ -14,12 +14,13 @@ R.prototype.record = function (opts) {
     var ps = this._spawn('sox', mergeArgs(opts, {
         'c' : 1,
         'r' : this.rate,
-        't' : 's32',
         'b' : 32,
-        'type' : 'coreaudio'
-    }).concat('default', '-q' ,'-t', 's32', '-c', '1', '-r', this.rate, '-b', '32', '-'));
+        'type' : (process.platform == 'linux') ? 'alsa' : 'coreaudio'
+    }).concat('default','-q' ,'--type', 'raw', '-c', '1', '-r', this.rate, '-b', '32', '-'));
     return ps;
 };
+
+// sox -c 1 -r 44100 -b 32 --type coreaudio default --type raw -c 1 -r 44100 -b 32 -p
 
 function mergeArgs (opts, args) {
     Object.keys(opts || {}).forEach(function (key) {
@@ -45,7 +46,15 @@ R.prototype._spawn = function (cmd, args) {
         }
         else self.emit('error', err);
     });
+    
     this.ps.stdin.on('error', function () {});
+    
+    // this.ps.stderr.on('data',function(err){
+    //   console.log('REC ERR: ---------------------------------- \n'
+    //             +err
+    //             +'\nREC ERR: ********************************** \n');
+    // });
+
     return this.ps;
 };
 
@@ -55,31 +64,31 @@ R.prototype.kill = function(signal){
 
 // sox -c 1 -r 44100 -b 32 --type coreaudio default --type raw -c 1 -r 44100 -b 32 -p
 
-    // rec = spawn('sox', [  
-    //   //GLOBAL OPTIONS
-    //   // '-q',
-    //   // '-V8',
-    //   // '--buffer','8192', //this is the global option to change the buffer size in case you want to limit the samples gathered
-    //   //INPUT FILE OPTIONS
-    //   // '--type','raw',
-    //   '--type', 'coreaudio',
-    //   '--channels', '1',
-    //   '--rate', '48k',
-    //   '--bits', '32',
-    //   '--encoding','float',
-    //   //INPUT FILE (OR SOURCE)
-    //   'default',
-    //   //'Built-in\ Input',
-    //   //OUTPUT FILE OPTIONS
-    //   '--type','raw',
-    //   '--channels', '1',
-    //   '--rate', '48k',
-    //   '--bits', '32',
-    //   '--encoding','float',
-    //   //OUTPUT FILE (OR DESITNATION)
-    //   './'+freq+'-sample'+format
-    //   // '-t','sox','-'
-    //   // '-p'
-    // ]);
+// rec = spawn('sox', [  
+//   //GLOBAL OPTIONS
+//   // '-q',
+//   // '-V8',
+//   // '--buffer','8192', //this is the global option to change the buffer size in case you want to limit the samples gathered
+//   //INPUT FILE OPTIONS
+//   // '--type','raw',
+//   '--type', 'coreaudio',
+//   '--channels', '1',
+//   '--rate', '48k',
+//   '--bits', '32',
+//   '--encoding','float',
+//   //INPUT FILE (OR SOURCE)
+//   'default',
+//   //'Built-in\ Input',
+//   //OUTPUT FILE OPTIONS
+//   '--type','raw',
+//   '--channels', '1',
+//   '--rate', '48k',
+//   '--bits', '32',
+//   '--encoding','float',
+//   //OUTPUT FILE (OR DESITNATION)
+//   './'+freq+'-sample'+format
+//   // '-t','sox','-'
+//   // '-p'
+// ]);
 
 
