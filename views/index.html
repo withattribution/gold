@@ -30,8 +30,13 @@ var graphIndex = 0
   ;
 
 var graph = generateGraph();
-    graph.renderer.unstack = true;
-    graph.render();
+
+configureGraph(graph);
+
+function configureGraph(g){
+  g.renderer.unstack = true;
+  g.render();
+}
 
 function generateGraph(){
   _series = [];
@@ -81,8 +86,7 @@ function scan() {
 
   if (graphIndex > 0) {
     graph = generateGraph();
-    graph.renderer.unstack = true;
-    graph.render();
+    configureGraph(graph);
   }
 
   socket.emit('scan',{reference:false,initialScan:true});
@@ -109,7 +113,7 @@ socket.on('done',function(val){
 
 function reScan(){
   reconnect();
-  
+
   socket.emit('scan',{initialScan:false});
 }
 
