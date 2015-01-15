@@ -36,7 +36,7 @@ function RMS (opts) {
     if (self.rangeMax == self.rangeMin)
       return self.scaleRangeMin;
 
-    return (( (value-self.rangeMin) * (self.scaleRangeMax-self.scaleRangeMin)) / (self.rangeMax-self.rangeMin))+self.scaleRangeMin;
+    return (( (value-self.rangeMin) * (self.scaleRangeMax-self.scaleRangeMin)) / (self.rangeMax-self.rangeMin)) + self.scaleRangeMin;
   }
 }
 
