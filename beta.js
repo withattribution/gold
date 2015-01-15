@@ -55,6 +55,10 @@ Beta.prototype.listen = function(){
   this.record = Record(this.opts).record();
   this.record.stdout.pipe(this.through);
 
+  this.record.stdout.once('readable',function(){
+    console.log('readable');
+  });
+
   return this.through;
 }
 

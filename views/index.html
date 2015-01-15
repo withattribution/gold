@@ -115,6 +115,7 @@ function reScan(){
   reconnect();
 
   socket.emit('scan',{initialScan:false});
+  document.getElementById('reScanButton').disabled = true;
 }
 
 function reconnect(){

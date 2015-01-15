@@ -20,7 +20,8 @@ var sublevels = require('./sublevels');
 var B = require('./beta');
 
 var key
-  , isReference = false;
+  , isReference = false
+  , isScanning = false;
 
 server.listen(9000);
 
@@ -52,6 +53,8 @@ io.on('connection', function (socket) {
     console.log("disconnected!");
     isReference = false;
     beta.stop();
+    //definitely make sure we clear this out before the next pass
+    beta = null;
   });
 
   beta.on('finished',function(samples){
