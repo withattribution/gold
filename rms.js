@@ -25,7 +25,7 @@ function RMS (opts) {
     var accumulator = 0;
     var sampleCount = Math.ceil(buffer.length/self.bytes);
 
-    for (var i = 0; i < buffer.length; i+=self.bytes) {
+    for (var i = 0; i < buffer.length; i += self.bytes) {
       accumulator += Math.pow(buffer.readInt32LE(i),2);
     }
 

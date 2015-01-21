@@ -101,7 +101,10 @@ S.prototype._spawn = function (cmd, args) {
         }
         else self.emit('error', err);
     });
-    this.ps.stdin.on('error', function () {});
+
+    this.ps.stdin.on('error', function (err) {
+        console.log('STDIN - ERROR: ',err);
+    });
 
     // this.stderr.on('data',function(err){
     //   console.log('REC ERR: ---------------------------------- \n'

@@ -12,7 +12,7 @@ module.exports = Beta;
 
 function Beta(opts) {
   if (!(this instanceof Beta)) return new Beta(opts);
-  if (!opts) this.opts = {rate:44100,minFreq:200,maxFreq:5000};
+  if (!opts) this.opts = {rate:44100,minFreq:1000,maxFreq:19000};
 
   var self = this;
 
@@ -59,6 +59,6 @@ Beta.prototype.listen = function(){
 }
 
 Beta.prototype.stop = function() {
-  this.synth && this.synth.kill();
   this.record && this.record.kill();
+  this.synth && this.synth.kill();
 }
