@@ -12,15 +12,16 @@ module.exports = Beta;
 
 function Beta(opts) {
   if (!(this instanceof Beta)) return new Beta(opts);
-  if (!opts) this.opts = {rate:44100,minFreq:1000,maxFreq:19000};
+  if (!opts) this.opts = {rate:44100,minFreq:4000,maxFreq:19000,steps:5};
 
   var self = this;
 
   this.samples = [];
   this.frequency = this.opts.minFreq;
+  this.steps = this.opts.steps;
 
   this.synth = Synth(this.opts.rate, function(t) {
-    return sin(self.frequency)*0.8;
+    return sin(self.frequency)*0.6;
     function sin (x) { return Math.sin(2 * Math.PI * t * x) }
   });
 
@@ -42,7 +43,7 @@ function Beta(opts) {
     self.samples.push(sample);
     // next(null,JSON.stringify(sample));
     next(null,sample);
-    self.frequency += 50;
+    self.frequency += this.steps;
   }
 
   function end(next) {
